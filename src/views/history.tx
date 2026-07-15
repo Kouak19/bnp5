@@ -1,0 +1,53 @@
+import React from 'react';
+import { useBank } from '../context/BankContext';
+
+const History = () => {
+  const { transactions } = useBank();
+
+  return (
+    <>
+      <div className="welcome">
+        <h4>Mes opérations</h4>
+      </div>
+
+      <div className="container">
+        <h3>Historique des opérations</h3>
+      </div>
+
+      <div className="container">
+        <div className="historique_container">
+          {transactions.map((operation, index) => {
+            const isDebit = operation.amount < 0;
+            const montantFormat = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(Math.abs(operation.amount));
+
+            return (
+              <div className="operation" key={operation.id || index}>
+                <div className="text_operation">
+                  <p>{operation.type}</p>
+                  <sub>{operation.reference}</sub>
+                  <hr style={{ margin: '0.5rem 0', border: 'none', borderTop: '1px solid rgba(0,0,0,0.05)' }} />
+                  <sub>{operation.date}</sub>
+                </div>
+                <div className="montant_operation">
+                  <div className="montant">
+                    <p style={{ color: isDebit ? 'var(--danger-color)' : 'var(--success-color)' }}>
+                      {isDebit ? '-' : '+'} {montantFormat}
+                    </p>
+                  </div>
+                  <div className="statut statut_success">
+                    <p>{operation.status || 'Effectué'}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          {transactions.length === 0 && (
+            <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>Aucune transaction trouvée.</p>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default History;

@@ -1,0 +1,481 @@
+import { useState, useRef } from 'react';
+import { useBank } from '../context/BankContext';
+
+const Transfer = () => {
+  const { globalBalance, executeTransfer, showToast } = useBank();
+  
+  // Form states
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [iban, setIban] = useState('');
+  const [swift, setSwift] = useState('');
+  const [bankCode, setBankCode] = useState('');
+  const [amount, setAmount] = useState('');
+  const [email, setEmail] = useState('');
+  const [label, setLabel] = useState('');
+  const [sendStatus, setSendStatus] = useState('idle');
+  const [sendMessage, setSendMessage] = useState('');
+  
+  // Modals & progress states
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmittingRef = useRef(false);
+  const [progress, setProgress] = useState(0);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showBlockedModal, setShowBlockedModal] = useState(false);
+  const [receiptData, setReceiptData] = useState(null);
+
+  const formatCurrency = (val) => {
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(val);
+  };
+
+  const resetFormFields = () => {
+    setFirstName('');
+    setLastName('');
+    setIban('');
+    setSwift('');
+    setBankCode('');
+    setAmount('');
+    setEmail('');
+    setLabel('');
+  };
+
+  const stopSubmitting = () => {
+    isSubmittingRef.current = false;
+    setIsSubmitting(false);
+  };
+
+  const generateRequestId = () => {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (isSubmittingRef.current) {
+      return;
+    }
+
+    const transferAmount = parseFloat(amount);
+    
+    if (isNaN(transferAmount) || transferAmount <= 0) {
+      setSendStatus('error');
+      setSendMessage('Veuillez saisir un montant supérieur à 0.');
+      return;
+    }
+    
+    if (transferAmount > globalBalance) {
+      setSendStatus('error');
+      setSendMessage('Solde insuffisant pour effectuer cette transaction.');
+      return;
+    }
+
+    isSubmittingRef.current = true;
+    setIsSubmitting(true);
+    
+    const transferData = {
+      requestId: generateRequestId(),
+      firstName,
+      lastName,
+      iban,
+      swift,
+      bankCode,
+      amount: transferAmount,
+      email,
+      label
+    };
+
+    setSendStatus('sending');
+    setSendMessage('Envoi en cours...');
+    setProgress(0);
+
+    const duration = 2500; // 2.5 seconds total loading
+    const intervalTime = 50; // update every 50ms
+    const step = (100 * intervalTime) / duration; // percentage step
+
+    const processTransfer = async () => {
+      if (transferAmount > 10000) {
+        setSendStatus('error');
+        setSendMessage('Transaction refusée : compte bloqué.');
+        setIsSubmitting(false);
+        setProgress(0);
+        setShowBlockedModal(true);
+        showToast('Transaction refusée - Compte bloqué', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:5000/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(transferData)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          const message = errorData?.message || 'Erreur réseau lors de l\'envoi.';
+          throw new Error(message);
+        }
+
+        await response.json();
+
+        executeTransfer(transferData);
+        setReceiptData(transferData);
+        resetFormFields();
+        setSendStatus('success');
+        setSendMessage('Succès : e-mail envoyé et virement effectué.');
+        setShowSuccessModal(true);
+        showToast('Virement SEPA effectué avec succès', 'success');
+      } catch (error) {
+        setSendStatus('error');
+        setSendMessage(error.message || 'Erreur lors de l\'envoi.');
+        showToast('Erreur lors de l\'envoi', 'error');
+      } finally {
+        stopSubmitting();
+        setProgress(0);
+      }
+    };
+
+    const timer = setInterval(() => {
+      setProgress((prev) => {
+        const next = prev + step;
+        if (next >= 100) {
+          clearInterval(timer);
+          processTransfer();
+          return 100;
+        }
+        return Math.round(next);
+      });
+    }, intervalTime);
+  };
+
+  // Circular progress dimensions
+  const radius = 60;
+  const stroke = 6;
+  const normalizedRadius = radius - stroke * 2;
+  const circumference = normalizedRadius * 2 * Math.PI;
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
+
+  return (
+    <>
+      <div className="welcome">
+        <h4>Effectuer un virement</h4>
+      </div>
+
+      <div className="footer">
+        <div className="gest_pic">
+          <i className="fas fa-university fa-2x" style={{ color: 'var(--primary-color)' }}></i>
+        </div>
+        <div className="text_footer">
+          <h5>Prélèvement: Compte courants</h5>
+          <h3>Solde: {formatCurrency(globalBalance)}</h3>
+        </div>
+      </div>
+
+      <div className="container">
+        <section className="beneficiary-info">
+          <h3>Informations du bénéficiaire</h3>
+          <form id="virementForm" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="nom">Nom</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                id="nom" 
+                required 
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="prenom">Prénom</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                id="prenom" 
+                required 
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="iban">IBAN</label>
+              <input 
+                type="text" 
+                className="form-control font-mono" 
+                id="iban" 
+                required 
+                value={iban}
+                onChange={(e) => setIban(e.target.value.toUpperCase())}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="swift">Code SWIFT</label>
+              <input 
+                type="text" 
+                className="form-control font-mono" 
+                id="swift" 
+                required 
+                value={swift}
+                onChange={(e) => setSwift(e.target.value.toUpperCase())}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="banque">Code Banque</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                id="banque" 
+                required 
+                value={bankCode}
+                onChange={(e) => setBankCode(e.target.value.replace(/[^0-9]/g, ''))}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="montant">Montant</label>
+              <input 
+                type="number" 
+                className="form-control font-bold" 
+                id="montant" 
+                required 
+                min="1"
+                step="0.01"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="dest_mail">Email du destinataire</label>
+              <input 
+                type="email" 
+                className="form-control" 
+                id="dest_mail" 
+                required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="libelle">Libellé</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                id="libelle" 
+                value={label}
+                onChange={(e) => setLabel(e.target.value)}
+              />
+            </div>
+            <button 
+              type="submit" 
+              className="btn btn-primary" 
+              id="submitBtn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Envoi en cours...' : 'Valider le virement'}
+            </button>
+            {sendMessage && (
+              <p style={{
+                marginTop: '1rem',
+                color: sendStatus === 'error' ? '#e74c3c' : sendStatus === 'success' ? '#2ecc71' : '#333',
+                fontSize: '0.95rem'
+              }}>
+                {sendMessage}
+              </p>
+            )}
+          </form>
+        </section>
+      </div>
+
+      {/* 🔄 CIRCULAR LOADING PROGRESS MODAL */}
+      {isSubmitting && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          zIndex: 9999,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backdropFilter: 'blur(4px)'
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '2.5rem',
+            borderRadius: '1rem',
+            textAlign: 'center',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+            width: '90%',
+            maxWidth: '350px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}>
+            <svg height={radius * 2} width={radius * 2} style={{ transform: 'rotate(-90deg)', marginBottom: '1.5rem' }}>
+              <circle
+                stroke="#e6e6e6"
+                fill="transparent"
+                strokeWidth={stroke}
+                r={normalizedRadius}
+                cx={radius}
+                cy={radius}
+              />
+              <circle
+                stroke="var(--primary-color)"
+                fill="transparent"
+                strokeWidth={stroke}
+                strokeDasharray={circumference + ' ' + circumference}
+                style={{ strokeDashoffset, transition: 'stroke-dashoffset 0.05s linear' }}
+                r={normalizedRadius}
+                cx={radius}
+                cy={radius}
+                strokeLinecap="round"
+              />
+            </svg>
+            <div style={{
+              position: 'absolute',
+              marginTop: '45px',
+              fontSize: '1.5rem',
+              fontWeight: 'bold',
+              color: 'var(--text-primary)'
+            }}>
+              {progress}%
+            </div>
+            <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontWeight: '600' }}>Envoi en cours</h4>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Traitement du virement SEPA sécurisé...</p>
+          </div>
+        </div>
+      )}
+
+      {/* 🎉 SUCCESS VALIDATION MODAL */}
+      {showSuccessModal && receiptData && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          zIndex: 9999,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backdropFilter: 'blur(4px)'
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '2rem',
+            borderRadius: '1rem',
+            textAlign: 'center',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+            width: '90%',
+            maxWidth: '400px'
+          }}>
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(46, 204, 113, 0.1)',
+              color: 'var(--success-color)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '2rem',
+              margin: '0 auto 1rem'
+            }}>
+              <i className="fas fa-check"></i>
+            </div>
+            <h3 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontWeight: 'bold' }}>Virement Effectué !</h3>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Le transfert de fonds a été traité avec succès par nos services.</p>
+            
+            <div style={{
+              textAlign: 'left',
+              background: '#f8f9fa',
+              padding: '1rem',
+              borderRadius: '0.5rem',
+              fontSize: '0.85rem',
+              lineHeight: '1.6',
+              marginBottom: '1.5rem',
+              border: '1px solid #e2e2e2'
+            }}>
+              <div><strong>Bénéficiaire :</strong> {receiptData.firstName} {receiptData.lastName}</div>
+              <div><strong>IBAN :</strong> {receiptData.iban}</div>
+              <div><strong>Montant :</strong> <span style={{ color: 'var(--primary-color)', fontWeight: 'bold' }}>{formatCurrency(receiptData.amount)}</span></div>
+              {receiptData.label && <div><strong>Libellé :</strong> {receiptData.label}</div>}
+            </div>
+
+            <button 
+              className="btn btn-primary" 
+              onClick={() => setShowSuccessModal(false)}
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ⚠️ BLOCKED ACCOUNT ERROR MODAL */}
+      {showBlockedModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          zIndex: 9999,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backdropFilter: 'blur(4px)'
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '2rem',
+            borderRadius: '1rem',
+            textAlign: 'center',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+            width: '90%',
+            maxWidth: '400px'
+          }}>
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(231, 76, 26, 0.1)',
+              color: 'var(--danger-color)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '2rem',
+              margin: '0 auto 1rem'
+            }}>
+              <i className="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 style={{ color: 'var(--danger-color)', marginBottom: '0.5rem', fontWeight: 'bold' }}>Virement Rejeté</h3>
+            <p style={{ fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Compte Bloqué</p>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: '1.5' }}>
+              Cette transaction ne peut pas être finalisée car votre compte fait l'objet d'une restriction temporaire. Veuillez contacter votre conseiller bancaire, <strong>Bernard Lavie</strong>, pour plus d'informations.
+            </p>
+
+            <button 
+              className="btn btn-primary" 
+              style={{ backgroundColor: 'var(--danger-color)' }}
+              onClick={() => setShowBlockedModal(false)}
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default Transfer;

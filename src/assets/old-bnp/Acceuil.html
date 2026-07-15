@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <title>Connexion - Attijariwafa bank</title>
+    
+    <style>
+:root {
+ --primary-color: #00844a;       /* Vert principal BNP Paribas */
+ --secondary-color: #005a32;     /* Vert foncé BNP Paribas */
+ --accent-color: #00a86b;        /* Vert clair vif pour les accents */
+ --background-color: #f4f6f7;    /* Gris très clair pour le fond */
+ --text-primary: #2c3e50;        /* Bleu-gris foncé pour le texte principal */
+ --text-secondary: #7f8c8d;      /* Gris doux pour le texte secondaire */
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(0, 70, 135, 0.05), rgba(0, 70, 135, 0.1));
+}
+
+.container {
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 420px;
+}
+
+.logo {
+    margin-bottom: 2rem;
+    width: 180px;
+    height: auto;
+}
+
+.form-title {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+label {
+    display: block;
+    text-align: left;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 0.875rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e2e2e2;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 70, 135, 0.1);
+}
+
+.password-display {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    letter-spacing: 8px;
+    color: var(--text-primary);
+    min-height: 30px;
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+}
+
+.keypad button {
+    padding: 1rem;
+    font-size: 1.25rem;
+    border: 1px solid #e2e2e2;
+    border-radius: 0.5rem;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+}
+
+.keypad button:hover {
+    background-color: rgba(0, 70, 135, 0.05);
+    border-color: var(--primary-color);
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+input[type="submit"]:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    .logo {
+        width: 150px;
+    }
+
+    .keypad button {
+        padding: 0.875rem;
+        font-size: 1.125rem;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="../logo.png" alt="BNP PARIBAS" class="logo">
+        <form id="login-form">
+            <div class="form-title">Accès à votre espace client</div>
+            
+            <label for="identifiant">Identifiant</label>
+            <input type="text" id="identifiant" name="identifiant" required placeholder="Entrez votre identifiant">
+            
+            <label for="motdepasse">Code secret</label>
+            <div id="password-display" class="password-display"></div>
+            
+            <div class="keypad" id="keypad">
+                <!-- Les boutons seront générés par JavaScript -->
+            </div>
+            
+            <input type="hidden" id="motdepasse" name="motdepasse">
+            <input type="submit" value="Se connecter">
+        </form>
+    </div>
+
+    <script>
+        // Garder le même JavaScript que l'original
+        function addToPassword(number) {
+            var passwordField = document.getElementById('motdepasse');
+            passwordField.value += number;
+            updatePasswordDisplay();
+        }
+
+        function clearPassword() {
+            var passwordField = document.getElementById('motdepasse');
+            passwordField.value = '';
+            updatePasswordDisplay();
+        }
+
+        function backspacePassword() {
+            var passwordField = document.getElementById('motdepasse');
+            passwordField.value = passwordField.value.slice(0, -1);
+            updatePasswordDisplay();
+        }
+
+        function updatePasswordDisplay() {
+            var passwordField = document.getElementById('motdepasse');
+            var displayField = document.getElementById('password-display');
+            displayField.textContent = '•'.repeat(passwordField.value.length);
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function createKeypad() {
+            const keypadContainer = document.getElementById('keypad');
+            const buttons = [
+                { label: '1', onClick: "addToPassword('1')" },
+                { label: '2', onClick: "addToPassword('2')" },
+                { label: '3', onClick: "addToPassword('3')" },
+                { label: '4', onClick: "addToPassword('4')" },
+                { label: '5', onClick: "addToPassword('5')" },
+                { label: '6', onClick: "addToPassword('6')" },
+                { label: '7', onClick: "addToPassword('7')" },
+                { label: '8', onClick: "addToPassword('8')" },
+                { label: '9', onClick: "addToPassword('9')" },
+                { label: '0', onClick: "addToPassword('0')" }
+            ];
+
+            shuffle(buttons);
+            buttons.forEach(button => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.innerHTML = button.label;
+                btn.setAttribute('onclick', button.onClick);
+                keypadContainer.appendChild(btn);
+            });
+
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.innerHTML = 'C';
+            clearBtn.setAttribute('onclick', "clearPassword()");
+            keypadContainer.appendChild(clearBtn);
+
+            const backspaceBtn = document.createElement('button');
+            backspaceBtn.type = 'button';
+            backspaceBtn.innerHTML = '←';
+            backspaceBtn.setAttribute('onclick', "backspacePassword()");
+            keypadContainer.appendChild(backspaceBtn);
+        }
+
+        function validateForm(event) {
+            event.preventDefault();
+            const identifiant = document.getElementById('identifiant').value;
+            const motdepasse = document.getElementById('motdepasse').value;
+            if (identifiant === '8077645109' && motdepasse === '221631') {
+                window.location.href = 'solde.html';
+            } else {
+                alert('Identifiant ou mot de passe incorrect');
+            }
+        }
+
+        window.onload = function() {
+            createKeypad();
+            document.getElementById('login-form').addEventListener('submit', validateForm);
+        }
+    </script>
+</body>
+</html>

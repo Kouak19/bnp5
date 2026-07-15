@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIB - Identité Bancaire</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <style>
+:root {
+ --primary-color: #00844a;       /* Vert principal BNP Paribas */
+ --secondary-color: #005a32;     /* Vert foncé BNP Paribas */
+ --accent-color: #00a86b;        /* Vert clair vif pour les accents */
+ --success-color: #2ecc71;       /* Vert pour validations */
+ --danger-color: #e74c3c;        /* Rouge vif pour alertes */
+ --background-color: #f4f6f7;    /* Gris très clair pour le fond */
+ --card-background: #ffffff;     /* Blanc pur */
+ --text-primary: #2c3e50;        /* Bleu-gris foncé pour le texte */
+ --text-secondary: #7f8c8d;      /* Gris doux pour le texte secondaire */
+ --border-color: #bdc3c7;        /* Gris neutre pour les bordures */
+ --hover-color: #005a32;         /* Vert foncé pour hover */
+ --gradient-start: #00844a;      /* Début du dégradé vert */
+ --gradient-end: #005a32;        /* Fin du dégradé vert */
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--background-color);
+  padding-bottom: 70px;
+}
+
+/* Header */
+.header {
+  background-color: white;
+  padding: 1.25rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+}
+
+.bank-logo {
+  height: 40px;
+  width: auto;
+}
+
+.logout-btn {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #cc0017;
+}
+
+/* Welcome Section */
+.welcome {
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  margin: 1.5rem auto;
+  max-width: 1200px;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+ .container {
+      max-width: 800px;
+      margin: 1.5rem auto;
+      background: var(--card-background);
+      border-radius: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    
+    .container:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .rib_title {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1.25rem;
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .rib_title h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    .rib_content {
+      padding: 1.5rem;
+      background: white;
+    }
+    
+    .rib_part {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.3s ease;
+    }
+    
+    .rib_part:hover {
+      background-color: rgba(0, 70, 135, 0.05);
+    }
+    
+    .rib_part:last-child {
+      border-bottom: none;
+    }
+    
+    .rib_label {
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin: 0;
+      display: flex;
+      align-items: center;
+    }
+    
+    .rib_label i {
+      margin-right: 8px;
+      color: var(--primary-color);
+    }
+    
+    .rib_value {
+      color: var(--text-primary);
+      font-weight: 600;
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      position: relative;
+    }
+    
+    /* IBAN Section */
+    .iban-section .rib_value {
+      letter-spacing: 1px;
+      font-size: 1.1rem;
+    }
+    
+    /* Copy button */
+    .copy-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      padding: 5px;
+      margin-left: 10px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .copy-btn:hover {
+      background: rgba(0, 70, 135, 0.1);
+    }
+    
+    /* Bank logo */
+    .bank-logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .bank-logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    
+    /* QR Code */
+    .qr-section {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 0.5rem;
+    }
+    
+    .qr-code {
+      text-align: center;
+    }
+    
+    .qr-code img {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .qr-caption {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 120px;
+      background-color: var(--text-primary);
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.8rem;
+      font-family: sans-serif;
+    }
+    
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* Success message */
+    .success-message {
+      background-color: var(--success-color);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: none;
+      animation: fadeIn 0.3s, fadeOut 0.3s 1.7s;
+      opacity: 0;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    
+    /* Media queries */
+    @media (max-width: 768px) {
+      .rib_part {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .rib_value {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+      
+      .iban-section .rib_value {
+        font-size: 0.9rem;
+        word-break: break-all;
+      }
+    }
+    
+    /* Animation for the value reveal */
+    .animate-reveal .rib_value {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: revealValue 0.5s forwards;
+    }
+    
+    @keyframes revealValue {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Apply animation with delay for each item */
+    .animate-reveal:nth-child(1) .rib_value { animation-delay: 0.1s; }
+    .animate-reveal:nth-child(2) .rib_value { animation-delay: 0.2s; }
+    .animate-reveal:nth-child(3) .rib_value { animation-delay: 0.3s; }
+    .animate-reveal:nth-child(4) .rib_value { animation-delay: 0.4s; }
+    .animate-reveal:nth-child(5) .rib_value { animation-delay: 0.5s; }
+    .animate-reveal:nth-child(6) .rib_value { animation-delay: 0.6s; }
+    
+    /* Watermark */
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      color: rgba(0, 70, 135, 0.04);
+      font-size: 7rem;
+      font-weight: bold;
+      pointer-events: none;
+      z-index: 1;
+      white-space: nowrap;
+    }
+    
+    /* Print-friendly styles */
+    @media print {
+      body {
+        background-color: white;
+        padding: 0;
+      }
+      
+      .container {
+        box-shadow: none;
+        margin: 0;
+        page-break-inside: avoid;
+      }
+      
+      .copy-btn {
+        display: none;
+      }
+    }
+    
+    /* Secured badge */
+    .secured-badge {
+      display: inline-flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+    
+    .secured-badge i {
+      margin-right: 5px;
+    }
+
+/* Navigation */
+.navigation_bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.navigation {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navigation ul {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  padding: 0.75rem 0;
+  margin: 0;
+  position: relative;
+}
+
+.navigation .list {
+  position: relative;
+  width: 70px;
+  z-index: 1;
+}
+
+.navigation .list a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: color 0.3s;
+}
+
+.navigation .list.active a {
+  color: var(--primary-color);
+}
+
+.navigation .icon {
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+
+.navigation .text {
+  font-size: 0.75rem;
+}
+
+.indicator {
+  position: absolute;
+  bottom: -10px;
+  width: 70px;
+  height: 70px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  transition: 0.5s;
+  opacity: 0;
+}
+
+.navigation .list.active ~ .indicator {
+  opacity: 0.2;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem;
+  }
+
+  .rib_value {
+    font-size: 0.9rem;
+  }
+
+  .welcome {
+    margin: 1rem;
+  }
+
+  .rib_title {
+    padding: 1rem;
+  }
+
+  .rib_content {
+    padding: 1rem;
+  }
+
+  .rib_part {
+    padding: 0.875rem;
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-title">
+      <img src="assets/images/logo.png" alt="Attijariwafa Bank Logo" class="bank-logo">
+    </div>
+    <div class="user-menu">
+      <button class="logout-btn" onclick="deconnexion()">
+        <i class="fas fa-sign-out-alt"></i>
+        Déconnexion
+      </button>
+    </div>
+</header>
+
+  <div id="google_translate_element"></div>
+
+  <div class="welcome">
+    <h4>Relevé d'identité bancaire</h4>
+  </div>
+
+<!-- RIB National -->
+<div class="container">
+    <div class="rib_title">
+      <div class="bank-logo">
+        <img src="assets/images/logo.png" alt="BNP Paribas Logo">
+      </div>
+      <div class="secured-badge">
+        <i class="fas fa-shield-alt"></i> SÉCURISÉ
+      </div>
+    </div>
+    
+    <div class="rib_content">
+      <div class="rib_part animate-reveal">
+        <p class="rib_label"><i class="fas fa-user"></i> Nom du Titulaire</p>
+        <p class="rib_value">  Georgina Ruaux  </p>
+      </div>
+      
+      <div class="rib_part animate-reveal">
+        <p class="rib_label"><i class="fas fa-university"></i> Domiciliation</p>
+        <p class="rib_value">BNP PARIBAS</p>
+      </div>
+      
+      <div class="rib_part animate-reveal">
+        <p class="rib_label"><i class="fas fa-building"></i> Code Banque</p>
+        <p class="rib_value">30004</p>
+      </div>
+      
+      <div class="rib_part animate-reveal">
+        <p class="rib_label"><i class="fas fa-landmark"></i> Code Agence</p>
+        <p class="rib_value">00819</p>
+      </div>
+      
+      <div class="rib_part animate-reveal">
+        <p class="rib_label"><i class="fas fa-list-ol"></i> Numéro de Compte</p>
+        <div class="tooltip">
+          <p class="rib_value">54350123000
+            <button class="copy-btn" onclick="copyToClipboard('54350123000')">
+              <i class="far fa-copy"></i>
+            </button>
+          </p>
+          <span class="tooltiptext">Copier le numéro</span>
+        </div>
+      </div>
+      
+      <div class="rib_part animate-reveal">
+        <p class="rib_label"><i class="fas fa-key"></i> Clé RIB</p>
+        <p class="rib_value">61</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- RIB International -->
+  <div class="container">
+    <div class="rib_title">
+      <div class="bank-logo">
+        <img src="assets/images/logo.png" alt="BNP Paribas Logo">
+        <!--h3>Coordonnées Bancaires Internationales</h3-->
+      </div>
+      <span>FR</span>
+    </div>
+    
+    <div class="rib_content">
+      
+      <div class="rib_part animate-reveal iban-section">
+        <p class="rib_label"><i class="fas fa-globe-europe"></i> IBAN</p>
+        <div class="tooltip">
+          <p class="rib_value">FR76 3000 4008 1954 3501 2300 061
+            <button class="copy-btn" onclick="copyToClipboard('FR76 3000 4008 1954 3501 2300 061')">
+              <i class="far fa-copy"></i>
+            </button>
+          </p>
+          <span class="tooltiptext">Copier l'IBAN</span>
+        </div>
+      </div>
+      
+      <div class="rib_part animate-reveal">
+        <p class="rib_label"><i class="fas fa-code-branch"></i> Code SWIFT (BIC)</p>
+        <div class="tooltip">
+          <p class="rib_value">BNPAFRPPXXX
+            <button class="copy-btn" onclick="copyToClipboard('BNPAFRPPXXX')">
+              <i class="far fa-copy"></i>
+            </button>
+          </p>
+          <span class="tooltiptext">Copier le BIC</span>
+        </div>
+      </div>
+    </div>
+</div>
+
+  <!-- Navigation -->
+  <div class="navigation_bar">
+    <div class="navigation">
+      <ul>
+        <li class="list active">
+          <a href="solde.html">
+            <span class="icon">
+              <ion-icon name="wallet-outline"></ion-icon>
+            </span>
+            <span class="text">Solde</span>
+          </a>
+        </li>
+        <li class="list">
+          <a href="hist.html">
+            <span class="icon">
+              <ion-icon name="time-outline"></ion-icon>
+            </span>
+            <span class="text">Historique</span>
+          </a>
+        </li>
+        <li class="list">
+          <a href="viro.html">
+            <span class="icon">
+              <ion-icon name="swap-horizontal-outline"></ion-icon>
+            </span>
+            <span class="text">Virement</span>
+          </a>
+        </li>
+        <li class="list">
+          <a href="cartes.html">
+            <span class="icon">
+              <ion-icon name="card-outline"></ion-icon>
+            </span>
+            <span class="text">Cartes</span>
+          </a>
+        </li>
+        <li class="list">
+          <a href="rib.html">
+            <span class="icon">
+              <ion-icon name="document-text-outline"></ion-icon>
+            </span>
+            <span class="text">RIB</span>
+          </a>
+        </li>
+        <div class="indicator"></div>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Navigation
+    const list = document.querySelectorAll(".list");
+    function activeLink() {
+      list.forEach((item) => item.classList.remove("active"));
+      this.classList.add("active");
+    }
+    list.forEach((item) => item.addEventListener("click", activeLink));
+
+    
+  </script>
+  <script>
+    function deconnexion() {
+        if(confirm("Êtes-vous sûr de vouloir vous déconnecter ?")) {
+            window.location.href = 'copie.html';
+        }
+    }
+</script>
+<script>
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          const successMessage = document.getElementById('successMessage');
+          successMessage.style.display = 'block';
+          successMessage.style.opacity = '1';
+          
+          setTimeout(() => {
+            successMessage.style.opacity = '0';
+            setTimeout(() => {
+              successMessage.style.display = 'none';
+            }, 300);
+          }, 2000);
+        })
+        .catch(err => {
+          console.error('Erreur lors de la copie: ', err);
+        });
+    }
+    
+    // Animate elements when they come into view
+    document.addEventListener('DOMContentLoaded', function() {
+      const ribParts = document.querySelectorAll('.rib_part');
+      ribParts.forEach(part => {
+        setTimeout(() => {
+          part.classList.add('visible');
+        }, 100 * Array.from(ribParts).indexOf(part));
+      });
+    });
+  </script>
+
+</body>
+</html>
