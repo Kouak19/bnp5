@@ -588,25 +588,15 @@ export const BankProvider = ({ children }) => {
   };
 
   // Reset all app data when logging out
-
- // Reset all app data when logging out
   const resetAppData = () => {
-    // Reset all states to defaults
-    setUser(DEFAULT_USER);
-    setAccounts(DEFAULT_ACCOUNTS);
-    setTransactions(DEFAULT_TRANSACTIONS);
-    setCard(DEFAULT_CARD);
-    setRib(DEFAULT_RIB);
-    
-    // Clear all localStorage data
-    localStorage.removeItem('bankUser');
-    localStorage.removeItem('bankAccounts');
-    localStorage.removeItem('bankTransactions');
-    localStorage.removeItem('bankCard');
-    localStorage.removeItem('bankRib');
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('currentView');
-  };
+  setIsAuthenticated(false);
+  setCurrentView('login');
+
+  localStorage.setItem('isAuthenticated', 'false');
+  localStorage.setItem('currentView', 'login');
+  // Notez : on NE supprime PAS bankUser, bankAccounts, bankTransactions, bankCard, bankRib
+  // => les modifications (solde, virements...) persistent à la déconnexion et reconnexion.
+};
 
   return (
     <BankContext.Provider value={{
