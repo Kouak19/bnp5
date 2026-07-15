@@ -6,7 +6,7 @@ export const useBank = () => useContext(BankContext);
 
 // Default values for initial state
 const DEFAULT_USER = {
-  name: "Sandra Klopp",
+  name: "Alexy Louan",
   location: "France",
   manager: "Arnaud Leroy",
   status: "Actif",
@@ -14,7 +14,7 @@ const DEFAULT_USER = {
 };
 
 const DEFAULT_ACCOUNTS = [
-  { id: 'cc', type: 'Compte Courant', number: 'N°******2284', balance: 13800.80, icon: 'wallet' },
+  { id: 'cc', type: 'Compte Courant', number: 'N°******2284', balance: 1000000, icon: 'wallet' },
   { id: 'livret', type: 'Livret A', number: 'N°******5462', balance: 0.00, icon: 'piggy-bank' },
   { id: 'plan', type: 'Plan Épargne', number: 'N°******8891', balance: 0.00, icon: 'chart-line' }
 ];
@@ -69,7 +69,7 @@ const DEFAULT_TRANSACTIONS = [
 
 const DEFAULT_CARD = {
   number: "4973 1204 8835 2284",
-  holder: "Sandra Klopp",
+  holder: "Alexy Louan",
   expiry: "12/27",
   isBlocked: false,
   foreignPayments: true,

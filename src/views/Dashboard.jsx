@@ -91,25 +91,25 @@ const Dashboard = () => {
           backgroundColor: '#ffffff', padding: '1.25rem', borderRadius: '20px', textAlign: 'center', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.02)', transition: 'transform 0.2s'
         }}>
           <i className="fas fa-paper-plane" style={{ fontSize: '1.5rem', color: '#10b981', marginBottom: '0.5rem' }}></i>
-          <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#374151' }}>Virement</div>
+          <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#ffffff' }}>Virement</div>
         </div>
         <div className="action-card" onClick={() => setCurrentView('rib')} style={{
           backgroundColor: '#ffffff', padding: '1.25rem', borderRadius: '20px', textAlign: 'center', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.02)', transition: 'transform 0.2s'
         }}>
           <i className="fas fa-qrcode" style={{ fontSize: '1.5rem', color: '#10b981', marginBottom: '0.5rem' }}></i>
-          <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#374151' }}>RIB QR</div>
+          <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#ffffff' }}>RIB QR</div>
         </div>
         <div className="action-card" onClick={() => setCurrentView('virement')} style={{
           backgroundColor: '#ffffff', padding: '1.25rem', borderRadius: '20px', textAlign: 'center', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.02)', transition: 'transform 0.2s'
         }}>
           <i className="fas fa-clock" style={{ fontSize: '1.5rem', color: '#10b981', marginBottom: '0.5rem' }}></i>
-          <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#374151' }}>Programmé</div>
+          <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#ffffff' }}>Programmé</div>
         </div>
         <div className="action-card" onClick={() => setCurrentView('cartes')} style={{
           backgroundColor: '#ffffff', padding: '1.25rem', borderRadius: '20px', textAlign: 'center', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.02)', transition: 'transform 0.2s'
         }}>
           <i className="fas fa-money-check" style={{ fontSize: '1.5rem', color: '#10b981', marginBottom: '0.5rem' }}></i>
-          <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#374151' }}>Chéquiers</div>
+          <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#ffffff' }}>Chéquiers</div>
         </div>
       </div>
 
