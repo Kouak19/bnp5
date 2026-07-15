@@ -20,7 +20,7 @@ const RIBView = () => {
   };
 
   // Valeurs par défaut conformes aux captures d'écran
-  const userName = user?.name || 'Georgina Ruaux';
+  const userName = user?.name || 'Alexy Louan';
   const domiciliation = rib?.bankName || 'BNP PARIBAS';
   const codeBanque = rib?.bankCode || '30004';
   const codeGuichet = rib?.branchCode || '00819';

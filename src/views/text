@@ -1,0 +1,211 @@
+import React, { useState, useEffect } from 'react';
+import { useBank } from '../context/BankContext';
+import bnpLogo from '../assets/logo.png';
+
+const Login = () => {
+  const { setIsAuthenticated, setCurrentView, showToast } = useBank();
+  const [identifiant, setIdentifiant] = useState('');
+  const [motdepasse, setMotdepasse] = useState('');
+  const [keypad, setKeypad] = useState([]);
+
+  const generateKeypad = () => {
+    const defaultButtons = [
+      { label: '1', val: '1' },
+      { label: '2', val: '2' },
+      { label: '3', val: '3' },
+      { label: '4', val: '4' },
+      { label: '5', val: '5' },
+      { label: '6', val: '6' },
+      { label: '7', val: '7' },
+      { label: '8', val: '8' },
+      { label: '9', val: '9' },
+      { label: '0', val: '0' }
+    ];
+
+    // Shuffle
+    for (let i = defaultButtons.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [defaultButtons[i], defaultButtons[j]] = [defaultButtons[j], defaultButtons[i]];
+    }
+
+    setKeypad(defaultButtons);
+  };
+
+  useEffect(() => {
+    generateKeypad();
+  }, []);
+
+  const handleKeyPress = (num) => {
+    if (motdepasse.length < 6) {
+      setMotdepasse(prev => prev + num);
+    }
+  };
+
+  const handleClear = () => {
+    setMotdepasse('');
+  };
+
+  const handleBackspace = () => {
+    setMotdepasse(prev => prev.slice(0, -1));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (identifiant === '6077660114' && motdepasse === '264015') {
+      showToast('Connexion réussie. Bienvenue dans votre Espace Client !', 'success');
+      setIsAuthenticated(true);
+      setCurrentView('dashboard');
+    } else {
+      showToast('Identifiant ou code secret incorrect.', 'error');
+      setMotdepasse('');
+      generateKeypad();
+    }
+  };
+
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      width: '100%',
+      background: 'linear-gradient(135deg, rgba(0, 84, 74, 0.05), rgba(0, 90, 50, 0.1))',
+      padding: '1rem'
+    }}>
+      <div className="container" style={{
+        backgroundColor: '#fff',
+        padding: '2.5rem',
+        borderRadius: '1rem',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        textAlign: 'center',
+        width: '90%',
+        maxWidth: '420px',
+        margin: '0 auto'
+      }}>
+       <img src={bnpLogo} alt="BNP Paribas" className="logo" style={{ height: '40px', objectFit: 'contain' }}/>
+        <form onSubmit={handleSubmit} id="login-form">
+          <div className="form-title" style={{
+            color: 'var(--text-primary)',
+            fontSize: '1.5rem',
+            marginBottom: '1.5rem',
+            fontWeight: '600'
+          }}>Accès à votre espace client</div>
+          
+          <label htmlFor="identifiant" style={{
+            display: 'block',
+            textAlign: 'left',
+            color: 'var(--text-secondary)',
+            marginBottom: '0.5rem',
+            fontSize: '0.9rem'
+          }}>Identifiant</label>
+          <input 
+            type="text" 
+            id="identifiant" 
+            name="identifiant" 
+            required 
+            placeholder="Entrez votre identifiant"
+            value={identifiant}
+            onChange={(e) => setIdentifiant(e.target.value.replace(/[^0-9]/g, ''))}
+            style={{
+              width: '100%',
+              padding: '0.875rem',
+              marginBottom: '1rem',
+              border: '1px solid #e2e2e2',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+              transition: 'all 0.3s ease'
+            }}
+          />
+          
+          <label style={{
+            display: 'block',
+            textAlign: 'left',
+            color: 'var(--text-secondary)',
+            marginBottom: '0.5rem',
+            fontSize: '0.9rem'
+          }}>Code secret</label>
+          <div id="password-display" className="password-display" style={{
+            fontSize: '1.5rem',
+            margin: '1rem 0',
+            letterSpacing: '8px',
+            color: 'var(--text-primary)',
+            minHeight: '30px'
+          }}>{'•'.repeat(motdepasse.length)}</div>
+          
+          <div className="keypad" id="keypad" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '0.75rem',
+            margin: '1.5rem 0'
+          }}>
+            {keypad.map((btn, index) => (
+              <button 
+                key={index} 
+                type="button" 
+                onClick={() => handleKeyPress(btn.val)}
+                style={{
+                  padding: '1rem',
+                  fontSize: '1.25rem',
+                  border: '1px solid #e2e2e2',
+                  borderRadius: '0.5rem',
+                  backgroundColor: 'white',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  color: 'var(--text-primary)'
+                }}
+              >{btn.label}</button>
+            ))}
+            <button 
+              type="button" 
+              onClick={handleClear}
+              style={{
+                padding: '1rem',
+                fontSize: '1.25rem',
+                border: '1px solid #e2e2e2',
+                borderRadius: '0.5rem',
+                backgroundColor: 'white',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                color: 'var(--text-primary)'
+              }}
+            >C</button>
+            <button 
+              type="button" 
+              onClick={handleBackspace}
+              style={{
+                padding: '1rem',
+                fontSize: '1.25rem',
+                border: '1px solid #e2e2e2',
+                borderRadius: '0.5rem',
+                backgroundColor: 'white',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                color: 'var(--text-primary)'
+              }}
+            >←</button>
+          </div>
+          
+          <input 
+            type="submit" 
+            value="Se connecter"
+            style={{
+              width: '100%',
+              padding: '1rem',
+              backgroundColor: 'var(--primary-color)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              marginTop: '1rem'
+            }}
+          />
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
