@@ -38,14 +38,14 @@ const Dashboard = () => {
         }}>
           <div className="profile-info" style={{ textAlign: 'left' }}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1f2937', margin: '0 0 0.5rem 0' }}>
-              {user.name || 'Georgina Ruaux'}
+              {user.name || 'Alexy Louan'}
             </h2>
             <div className="location" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6b7280', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
               <i className="fas fa-map-marker-alt"></i>
-              <span>Bordeaux, France</span>
+              <span>France</span>
             </div>
             <p style={{ color: '#6b7280', margin: '0 0 0.25rem 0', fontSize: '0.9rem' }}>
-              Gestionnaire: <span style={{ color: '#10b981', fontWeight: '600' }}>Bernard Lavie</span>
+              Gestionnaire: <span style={{ color: '#10b981', fontWeight: '600' }}>Arnaud Leroy</span>
             </p>
             <p style={{ color: '#9ca3af', margin: 0, fontSize: '0.8rem' }} id="lastConnection">
               Dernière connexion: <span>{user.lastConnection || '31/05/2026 18:46'}</span>

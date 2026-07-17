@@ -587,8 +587,8 @@ export const BankProvider = ({ children }) => {
     showToast(`Simulation du scraping réussi : ${fileName} importé.`, "success");
   };
 
-  // Reset all app data when logging out
-  const resetAppData = () => {
+// Reset all app data when logging out
+const resetAppData = () => {
   setIsAuthenticated(false);
   setCurrentView('login');
 

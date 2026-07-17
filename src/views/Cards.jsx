@@ -105,7 +105,7 @@ const Cards = () => {
           <div className="card-info" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div className="card-holder" style={{ textAlign: 'left' }}>
               <div className="card-label" style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: '#94a3b8', letterSpacing: '1px', marginBottom: '2px' }}>Titulaire</div>
-              <div style={{ fontSize: '0.85rem', fontWeight: '600', letterSpacing: '0.5px' }}>{card.holder || 'Georgina Ruaux'}</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: '600', letterSpacing: '0.5px' }}>{card.holder || 'Alexy Louan'}</div>
             </div>
             <div className="card-expires" style={{ textAlign: 'right' }}>
               <div className="card-label" style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: '#94a3b8', letterSpacing: '1px', marginBottom: '2px' }}>Expire</div>
