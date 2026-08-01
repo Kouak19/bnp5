@@ -166,5 +166,5 @@ app.post('/api/send-email', async (req, res) => {
   }
 });
 
-// CORRECTION 2 : Supprimer app.listen() et exporter l'application pour Vercel
+
 export default app;
