@@ -1,38 +1,9 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect, useRef } from 'react';
 import { DEFAULT_USERS } from '../defaultUsers';
 
 const BankContext = createContext();
 
 export const useBank = () => useContext(BankContext);
-
-// ============================================================
-// 📋 100 COMPTES UTILISATEURS - DÉFINIS DIRECTEMENT DANS LE CODE
-// ============================================================
-// Les données de base sont dans src/defaultUsers.js
-// Les soldes et transactions modifiés sont sauvegardés dans le localStorage
-// ============================================================
-
-// Helper : charger les données sauvegardées d'un utilisateur
-const loadUserBalance = (userId) => {
-  try {
-    const stored = localStorage.getItem(`user_${userId}`);
-    if (stored) {
-      return JSON.parse(stored);
-    }
-  } catch (error) {
-    console.warn(`Failed to load user ${userId}:`, error);
-  }
-  return null;
-};
-
-// Helper : sauvegarder les données d'un utilisateur
-const saveUserBalance = (userId, data) => {
-  try {
-    localStorage.setItem(`user_${userId}`, JSON.stringify(data));
-  } catch (error) {
-    console.warn(`Failed to save user ${userId}:`, error);
-  }
-};
 
 export const BankProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -49,28 +20,11 @@ export const BankProvider = ({ children }) => {
   // Notification Toast state
   const [toast, setToast] = useState(null);
   
-  // Multi-user state - Base users from defaultUsers.js
-  const [users, setUsers] = useState(() => {
-    // Charger les users de base depuis le fichier
-    const baseUsers = [...DEFAULT_USERS];
-    // Appliquer les soldes sauvegardés par utilisateur
-    return baseUsers.map(user => {
-      const saved = loadUserBalance(user.id);
-      if (saved) {
-        return {
-          ...user,
-          accounts: saved.accounts || user.accounts,
-          transactions: saved.transactions || user.transactions,
-          card: saved.card || user.card,
-          rib: saved.rib || user.rib,
-          lastConnection: saved.lastConnection || ''
-        };
-      }
-      return user;
-    });
-  });
+  // Multi-user state - TOUJOURS chargé depuis defaultUsers.js (pas de localStorage pour les users)
+  const [users, setUsers] = useState([...DEFAULT_USERS]);
   const [activeUserId, setActiveUserId] = useState(() => {
     const stored = localStorage.getItem('activeUserId');
+    // Vérifier que l'user existe dans la liste
     if (stored && DEFAULT_USERS.find(u => u.id === stored)) {
       return stored;
     }
@@ -129,6 +83,17 @@ export const BankProvider = ({ children }) => {
   // Calculate global balance
   const globalBalance = accounts.find(a => a.id === 'cc')?.balance || 0;
 
+  // Update active user data in the users array (en mémoire seulement)
+  useEffect(() => {
+    if (activeUserId) {
+      setUsers(prev => prev.map(u => 
+        u.id === activeUserId 
+          ? { ...u, accounts, transactions, card, rib, lastConnection: user.lastConnection }
+          : u
+      ));
+    }
+  }, [accounts, transactions, card, rib]);
+
   // Load user data when active user changes
   useEffect(() => {
     if (activeUser) {
@@ -153,36 +118,6 @@ export const BankProvider = ({ children }) => {
       setRib(activeUser.rib);
     }
   }, [activeUserId]);
-
-  // Sauvegarder les données de l'utilisateur courant en localStorage
-  // à chaque modification des comptes, transactions, carte, RIB
-  useEffect(() => {
-    if (activeUserId && activeUser) {
-      const now = new Date();
-      const options = { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      };
-      const dataToSave = {
-        accounts,
-        transactions,
-        card,
-        rib,
-        lastConnection: now.toLocaleDateString('fr-FR', options)
-      };
-      saveUserBalance(activeUserId, dataToSave);
-
-      // Mettre à jour aussi dans le state users
-      setUsers(prev => prev.map(u => 
-        u.id === activeUserId 
-          ? { ...u, accounts, transactions, card, rib, lastConnection: dataToSave.lastConnection }
-          : u
-      ));
-    }
-  }, [accounts, transactions, card, rib]);
 
   // Persist isAuthenticated to localStorage
   useEffect(() => {
@@ -228,14 +163,14 @@ export const BankProvider = ({ children }) => {
     setIsAuthenticated(false);
     setCurrentView('login');
     setActiveUserId(null);
-    // Nettoyer le localStorage session (mais garder les soldes sauvegardés)
+    // Nettoyer le localStorage pour éviter les résidus
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('currentView');
     localStorage.removeItem('activeUserId');
-    // NE PAS supprimer les 'user_*' car ils contiennent les soldes sauvegardés
+    localStorage.removeItem('bankUsers');
   };
 
-  // Perform transfer - Soustrait le montant et sauvegarde automatiquement
+  // Perform transfer
   const executeTransfer = (transferData) => {
     const amountNum = parseFloat(transferData.amount);
     
