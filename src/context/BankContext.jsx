@@ -537,7 +537,7 @@ export const BankProvider = ({ children }) => {
     
     if (fileName === "solde.html") {
       setUser({
-        name: "Sandra Klopp",
+        name: "Alexy Louan",
         location: "France",
         manager: "Arnaud Leroy",
         status: "Actif",
@@ -565,11 +565,11 @@ export const BankProvider = ({ children }) => {
         iban: "FR76 3000 4008 1954 3501 2300 061",
         swift: "BNPAFRPPXXX"
       });
-      setUser(prev => ({ ...prev, name: "Sandra Klopp" }));
+      setUser(prev => ({ ...prev, name: "Alexy Louan" }));
     } else if (fileName === "cartes.html") {
       setCard({
         number: "4973 1204 8835 2284",
-        holder: "Sandra Klopp",
+        holder: "Alexy Louan",
         expiry: "12/27",
         isBlocked: false,
         foreignPayments: true,
