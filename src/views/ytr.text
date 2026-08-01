@@ -107,7 +107,7 @@ const Transfer = () => {
       }
 
       try {
-        const response = await fetch('/api/send-email', {
+        const response = await fetch('/api/index.js', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
