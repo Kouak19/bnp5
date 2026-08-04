@@ -42,10 +42,10 @@ const Dashboard = () => {
             </h2>
             <div className="location" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6b7280', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
               <i className="fas fa-map-marker-alt"></i>
-              <span>France</span>
+              <span>{user.location || 'France'}</span>
             </div>
             <p style={{ color: '#6b7280', margin: '0 0 0.25rem 0', fontSize: '0.9rem' }}>
-              Gestionnaire: <span style={{ color: '#10b981', fontWeight: '600' }}>Arnaud Leroy</span>
+              Gestionnaire: <span style={{ color: '#10b981', fontWeight: '600' }}>{user.manager || 'Arnaud Leroy'}</span>
             </p>
             <p style={{ color: '#9ca3af', margin: 0, fontSize: '0.8rem' }} id="lastConnection">
               Dernière connexion: <span>{user.lastConnection || '31/05/2026 18:46'}</span>

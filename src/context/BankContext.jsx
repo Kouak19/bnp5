@@ -106,7 +106,7 @@ export const BankProvider = ({ children }) => {
         lastConnection: now.toLocaleDateString('fr-FR', options)
       };
     }
-    return { name: "", location: "France", manager: "Arnaud Leroy", status: "Actif", lastConnection: "" };
+    return { name: "", location: "", manager: "", status: "Actif", lastConnection: "" };
   });
 
   const [accounts, setAccounts] = useState(() => {
