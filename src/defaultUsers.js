@@ -71,7 +71,7 @@ export const DEFAULT_USERS = [
     codeSecret: "101255",
     nom: "Tanguy",
     prenom: "Daniella",
-    location: "brest",
+    location: "Brest",
     manager: "Gilbert Leroy",
     status: "Actif",
     lastConnection: "",
@@ -84,7 +84,7 @@ export const DEFAULT_USERS = [
       { id: 1, type: "Virement sortant", reference: "FR76000000003000437035", date: "14 Avril 2025", amount: -25000.0, status: "Effectué", category: "Virement" },
       { id: 2, type: "Virement entrant", reference: "FR76000000004000562963", date: "05 Mars 2025", amount: 20000.0, status: "Effectué", category: "Revenu" }
     ],
-    card: { number: "4973 1203 8803 2203", holder: "Sophie Dubois", expiry: "12/27", isBlocked: false, foreignPayments: true, limit: 3000, withdrawalLimit: 1200 },
+    card: { number: "4973 1203 8803 2203", holder: "Daniella Tanguy", expiry: "12/27", isBlocked: false, foreignPayments: true, limit: 3000, withdrawalLimit: 1200 },
     rib: { bankName: "BNP PARIBAS", bankCode: "30004", branchCode: "103", accountNumber: "5435312303", key: "13", iban: "FR76 3000 4103 5435312303 13", swift: "BNPAFRPPXXX" }
   },
   {
