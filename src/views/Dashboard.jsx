@@ -56,16 +56,16 @@ const Dashboard = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              backgroundColor: '#ecfdf5',
-              color: '#10b981',
+              backgroundColor: user.status === 'Bloqué' ? '#fef2f2' : '#ecfdf5',
+              color: user.status === 'Bloqué' ? '#ef4444' : '#10b981',
               padding: '4px 12px',
               borderRadius: '20px',
               fontSize: '0.8rem',
               fontWeight: '600',
               marginBottom: '0.5rem'
             }}>
-              <span className="status-dot" style={{ width: '8px', height: '8px', backgroundColor: '#10b981', borderRadius: '50%' }}></span>
-              ACTIF
+              <span className="status-dot" style={{ width: '8px', height: '8px', backgroundColor: user.status === 'Bloqué' ? '#ef4444' : '#10b981', borderRadius: '50%' }}></span>
+              {user.status === 'Bloqué' ? 'BLOQUÉ' : 'ACTIF'}
             </div>
             <div className="balance-amount" style={{ fontSize: '2rem', fontWeight: '800', color: '#111827' }}>
               {formatCurrency(globalBalance || 50000.00)}

@@ -73,7 +73,7 @@ export const DEFAULT_USERS = [
     prenom: "Daniella",
     location: "Brest",
     manager: "Gilbert Leroy",
-    status: "Actif",
+    status: "Bloqué",
     lastConnection: "",
     accounts: [
       { id: "cc", type: "Compte Courant", number: "N°******2203", balance: 103510.0, icon: "wallet" },
