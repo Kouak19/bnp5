@@ -91,14 +91,14 @@ export const DEFAULT_USERS = [
     id: "user_004",
     identifiant: "1000000004",
     codeSecret: "101262",
-    nom: "Moreau",
-    prenom: "Thomas",
+    nom: "Devin",
+    prenom: "Arnaud",
     location: "France",
-    manager: "Arnaud Leroy",
+    manager: "Gabriel Leroy",
     status: "Actif",
     lastConnection: "",
     accounts: [
-      { id: "cc", type: "Compte Courant", number: "N°******2204", balance: 1000000.0, icon: "wallet" },
+      { id: "cc", type: "Compte Courant", number: "N°******2204", balance: 845255.0, icon: "wallet" },
       { id: "livret", type: "Livret A", number: "N°******5404", balance: 0.0, icon: "piggy-bank" },
       { id: "plan", type: "Plan Épargne", number: "N°******8804", balance: 0.0, icon: "chart-line" }
     ],
@@ -106,7 +106,7 @@ export const DEFAULT_USERS = [
       { id: 1, type: "Virement sortant", reference: "FR76000000003000449380", date: "14 Avril 2025", amount: -25000.0, status: "Effectué", category: "Virement" },
       { id: 2, type: "Virement entrant", reference: "FR76000000004000617284", date: "05 Mars 2025", amount: 20000.0, status: "Effectué", category: "Revenu" }
     ],
-    card: { number: "4973 1204 8804 2204", holder: "Thomas Moreau", expiry: "12/27", isBlocked: false, foreignPayments: true, limit: 3000, withdrawalLimit: 1200 },
+    card: { number: "4973 1204 8804 2204", holder: "Arnaud Devin", expiry: "12/27", isBlocked: false, foreignPayments: true, limit: 3000, withdrawalLimit: 1200 },
     rib: { bankName: "BNP PARIBAS", bankCode: "30004", branchCode: "104", accountNumber: "5435412304", key: "14", iban: "FR76 3000 4104 5435412304 14", swift: "BNPAFRPPXXX" }
   },
   {
