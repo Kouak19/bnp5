@@ -8,9 +8,10 @@ import Transfer from './views/Transfer';
 import Cards from './views/Cards';
 import RIBView from './views/RIBView';
 import Navigation from './components/Navigation';
+import BlockAlert from './components/BlockAlert';
 
 const AppContent = () => {
-  const { isAuthenticated, currentView, setCurrentView, showToast, resetAppData } = useBank();
+  const { isAuthenticated, currentView, setCurrentView, showToast, resetAppData, user } = useBank();
 
   // Si authentifié mais vue est 'login', rediriger à 'dashboard'
   useEffect(() => {
@@ -30,6 +31,9 @@ const AppContent = () => {
 
   return (
     <>
+      {/* Alerte de sécurité persistante si le compte est bloqué */}
+      {user?.status === 'Bloqué' && <BlockAlert userName={user.name} />}
+
       <header className="header">
         <div className="header-title">
           <img src={bnpLogo} alt="BNP Paribas" className="logo" style={{ height: '40px', objectFit: 'contain' }}/>
@@ -44,7 +48,7 @@ const AppContent = () => {
 
       <Navigation />
 
-      <main className="main-container">
+      <main className="main-container" style={{ marginTop: user?.status === 'Bloqué' ? '44px' : '0' }}>
         {currentView === 'dashboard'   && <Dashboard />}
         {currentView === 'historique'  && <History />}
         {currentView === 'virement'    && <Transfer />}

@@ -63,6 +63,7 @@ export const BankProvider = ({ children }) => {
           transactions: saved.transactions || user.transactions,
           card: saved.card || user.card,
           rib: saved.rib || user.rib,
+          status: saved.status !== undefined ? saved.status : user.status,
           lastConnection: saved.lastConnection || ''
         };
       }
