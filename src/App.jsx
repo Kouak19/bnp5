@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BankProvider, useBank } from './context/BankContext';
 import bnpLogo from './assets/logo.png';
 import Login from './views/Login';
@@ -9,6 +9,7 @@ import Cards from './views/Cards';
 import RIBView from './views/RIBView';
 import Navigation from './components/Navigation';
 import BlockAlert from './components/BlockAlert';
+import LogoutConfirmModal from './components/LogoutConfirmModal';
 
 const AppContent = () => {
   const { isAuthenticated, currentView, setCurrentView, showToast, resetAppData, user } = useBank();
@@ -20,12 +21,17 @@ const AppContent = () => {
     }
   }, [isAuthenticated, currentView, setCurrentView]);
 
-  const handleLogout = () => {
-    if (window.confirm('Êtes-vous sûr de vouloir vous déconnecter de votre espace sécurisé ?')) {
-      resetAppData();
-      showToast('Vous avez été déconnecté avec succès.');
-    }
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const requestLogout = () => setShowLogoutModal(true);
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
+    resetAppData();
+    showToast('Vous avez été déconnecté avec succès.');
   };
+
+  const cancelLogout = () => setShowLogoutModal(false);
 
   if (!isAuthenticated) return <Login />;
 
@@ -39,7 +45,7 @@ const AppContent = () => {
           <img src={bnpLogo} alt="BNP Paribas" className="logo" style={{ height: '40px', objectFit: 'contain' }}/>
         </div>
         <div className="user-menu">
-          <button className="logout-btn" onClick={handleLogout}>
+          <button className="logout-btn" onClick={requestLogout}>
             <i className="fas fa-sign-out-alt"></i>
             Déconnexion
           </button>
@@ -55,6 +61,11 @@ const AppContent = () => {
         {currentView === 'cartes'      && <Cards />}
         {currentView === 'rib'         && <RIBView />}
       </main>
+
+      {/* Popup de confirmation de déconnexion stylée */}
+      {showLogoutModal && (
+        <LogoutConfirmModal onConfirm={confirmLogout} onCancel={cancelLogout} />
+      )}
     </>
   );
 };
