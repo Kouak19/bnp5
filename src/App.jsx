@@ -28,7 +28,7 @@ const AppContent = () => {
   const confirmLogout = () => {
     setShowLogoutModal(false);
     resetAppData();
-    showToast('Vous avez été déconnecté avec succès.');
+    showToast('');
   };
 
   const cancelLogout = () => setShowLogoutModal(false);

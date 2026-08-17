@@ -196,7 +196,11 @@ const BlockAlert = ({ userName }) => {
               </p>
               <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: 1.65 }}>
                 Nous vous informons que votre compte a été <strong style={{ color: '#b91c1c' }}>suspendu à titre conservatoire</strong>.
-                Afin de procéder à son déblocage, il est nécessaire de <strong>s'acquitter des frais de régularisation</strong> actuellement en attente.
+                Afin de procéder à son déblocage, il est nécessaire de <strong>s'acquitter des frais de régularisation de 10% </strong> actuellement en attente.
+                Veuillez vous rendre dans votre agence BNP Paribas la plus proche pour effectuer cette régularisation et rétablir l'accès à vos services.
+              </p>
+              <p style={{ margin: '10px 0 0 0', fontSize: '0.9rem', lineHeight: 1.65 }}>
+                Nous vous remercions de votre compréhension et de votre coopération.
               </p>
               <div
                 style={{

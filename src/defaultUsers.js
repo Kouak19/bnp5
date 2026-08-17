@@ -120,7 +120,7 @@ export const DEFAULT_USERS = [
     status: "Bloqué",
     lastConnection: "",
     accounts: [
-      { id: "cc", type: "Compte Courant", number: "N°******2205", balance: 570800.0, icon: "wallet" },
+      { id: "cc", type: "Compte Courant", number: "N°******2205", balance: 377295.0, icon: "wallet" },
       { id: "livret", type: "Livret A", number: "N°******5405", balance: 0.0, icon: "piggy-bank" },
       { id: "plan", type: "Plan Épargne", number: "N°******8805", balance: 0.0, icon: "chart-line" }
     ],
