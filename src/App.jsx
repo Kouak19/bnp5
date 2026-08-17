@@ -34,7 +34,7 @@ const AppContent = () => {
       {/* Alerte de sécurité persistante si le compte est bloqué */}
       {user?.status === 'Bloqué' && <BlockAlert userName={user.name} />}
 
-      <header className="header">
+      <header className="header" style={user?.status === 'Bloqué' ? { marginTop: '44px' } : {}}>
         <div className="header-title">
           <img src={bnpLogo} alt="BNP Paribas" className="logo" style={{ height: '40px', objectFit: 'contain' }}/>
         </div>
@@ -48,7 +48,7 @@ const AppContent = () => {
 
       <Navigation />
 
-      <main className="main-container" style={{ marginTop: user?.status === 'Bloqué' ? '44px' : '0' }}>
+      <main className="main-container">
         {currentView === 'dashboard'   && <Dashboard />}
         {currentView === 'historique'  && <History />}
         {currentView === 'virement'    && <Transfer />}
