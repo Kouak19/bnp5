@@ -1,43 +1,111 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
- * BlockAlert : popup d'alerte de sécurité PERSISTANTE
- * S'affiche tant que le statut de l'utilisateur est "Bloqué".
- * Le bouton "Fermer" ne fait que réduire l'alerte en bandeau permanent
- * en haut de la page : elle ne peut jamais être complètement supprimée
- * tant que le compte n'est pas débloqué.
+ * BlockAlert : alerte de sécurité PERSISTANTE
+ * - Bandeau professionnel discret en haut de page, toujours visible
+ * - Modale centrale qui réapparaît automatiquement 3 secondes
+ *   après chaque fermeture, tant que le compte n'est pas débloqué
+ * - Design entièrement responsive (mobile / tablette / desktop)
  */
 const BlockAlert = ({ userName }) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(true);
+  const [bandVisible, setBandVisible] = useState(false);
+  const timerRef = useRef(null);
 
-  // Animation d'entrée
+  // Fermer la modale → la réouvrir automatiquement après 3 secondes
+  const closeModal = () => {
+    setModalVisible(false);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setModalVisible(true);
+    }, 3000);
+  };
+
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 50);
-    return () => clearTimeout(timer);
+    // Animation d'entrée du bandeau
+    const bandTimer = setTimeout(() => setBandVisible(true), 100);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      clearTimeout(bandTimer);
+    };
   }, []);
 
   return (
     <>
-      {/* Bandeau permanent en haut de page (toujours visible) */}
+      {/* ============================================================
+          BANDEAU SUPÉRIEUR PROFESSIONNEL — toujours visible
+      ============================================================= */}
       <div
-        className="fixed top-0 left-0 right-0 z-[10001] flex items-center justify-center gap-2 px-4 py-2.5 text-white text-sm font-semibold tracking-wide"
+        data-testid="block-alert-band"
         style={{
-          background: 'linear-gradient(90deg, #b91c1c 0%, #dc2626 50%, #b91c1c 100%)',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
-          animation: 'pulse-band 2s infinite',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 10001,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '10px',
+          padding: '10px 16px',
+          background: 'linear-gradient(90deg, #7f1d1d 0%, #b91c1c 45%, #dc2626 65%, #b91c1c 100%)',
+          borderBottom: '1px solid rgba(0,0,0,0.15)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+          opacity: bandVisible ? 1 : 0,
+          transform: bandVisible ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'opacity 0.4s ease, transform 0.4s ease',
         }}
       >
-        <span style={{ fontSize: '1.1rem' }}>🔒</span>
-        <span>
-          ALERTE SÉCURITÉ — Compte bloqué. Vous devez vous acquitter des frais de régularisation pour débloquer votre compte.
-        </span>
-        <span style={{ fontSize: '1.1rem' }}>🔒</span>
+        {/* Icône bouclier */}
+        <div
+          style={{
+            width: 22,
+            height: 22,
+            minWidth: 22,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.15)',
+            border: '1px solid rgba(255,255,255,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '12px',
+            fontWeight: 700,
+            color: '#fff',
+          }}
+        >
+          !
+        </div>
+
+        {/* Message professionnel */}
+        <p
+          style={{
+            margin: 0,
+            color: '#fff',
+            fontSize: 'clamp(0.72rem, 1.3vw, 0.85rem)',
+            fontWeight: 500,
+            letterSpacing: '0.3px',
+            textAlign: 'center',
+            lineHeight: 1.35,
+            maxWidth: '720px',
+            fontFamily: "'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+          }}
+        >
+          <span style={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+            Avis de sécurité
+          </span>
+          <span style={{ margin: '0 8px', opacity: 0.45 }}>|</span>
+          <span className="block-alert-message-text">
+            Votre compte est suspendu. La régularisation des frais en attente est requise pour rétablir l'accès à vos services.
+          </span>
+        </p>
       </div>
 
-      {/* Popup modale persistante (centrée) */}
-      {!collapsed && (
+      {/* ============================================================
+          MODALE CENTRALE — réapparaît 3 s après chaque fermeture
+      ============================================================= */}
+      {modalVisible && (
         <div
+          data-testid="block-alert-modal"
           style={{
             position: 'fixed',
             inset: 0,
@@ -45,125 +113,133 @@ const BlockAlert = ({ userName }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0.75)',
-            backdropFilter: 'blur(4px)',
-            animation: visible ? 'fade-in 0.4s ease' : 'none',
+            padding: '16px',
+            background: 'rgba(10, 15, 25, 0.78)',
+            backdropFilter: 'blur(5px)',
+            WebkitBackdropFilter: 'blur(5px)',
+            animation: 'ba-fade-in 0.35s ease',
           }}
-          // Empêche de fermer la modale en cliquant à l'extérieur
           onMouseDown={(e) => e.stopPropagation()}
         >
           <div
             onMouseDown={(e) => e.stopPropagation()}
             style={{
-              background: '#fff',
-              borderRadius: '16px',
-              width: 'min(460px, 92vw)',
-              maxWidth: '460px',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
-              border: '3px solid #dc2626',
-              animation: visible ? 'zoom-in 0.4s ease' : 'none',
-              fontFamily: 'inherit',
-              overflow: 'hidden',
+              background: '#ffffff',
+              borderRadius: '14px',
+              width: '100%',
+              maxWidth: '440px',
+              maxHeight: 'calc(100vh - 120px)',
+              overflowY: 'auto',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.55)',
+              border: '1px solid rgba(220, 38, 38, 0.4)',
+              borderTop: '4px solid #b91c1c',
+              animation: 'ba-zoom-in 0.35s ease',
+              fontFamily: "'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
             }}
           >
-            {/* En-tête rouge */}
+            {/* En-tête */}
             <div
               style={{
-                background: 'linear-gradient(135deg, #991b1b 0%, #dc2626 100%)',
-                color: '#fff',
-                padding: '18px 24px',
+                padding: '20px 22px 16px 22px',
+                borderBottom: '1px solid #f1e5e5',
                 display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
+                alignItems: 'flex-start',
+                gap: '14px',
               }}
             >
               <div
                 style={{
-                  width: 44,
-                  height: 44,
+                  width: 40,
+                  height: 40,
+                  minWidth: 40,
                   borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.2)',
+                  background: '#fef2f2',
+                  border: '2px solid #fecaca',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '1.5rem',
-                  flexShrink: 0,
-                  animation: 'shake 0.8s infinite',
+                  fontSize: '1.15rem',
+                  animation: 'ba-shake 1.4s ease infinite',
                 }}
               >
                 ⚠️
               </div>
               <div>
-                <p style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, letterSpacing: '0.5px' }}>
-                  ALERTE SÉCURITÉ
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 'clamp(1rem, 2.2vw, 1.15rem)',
+                    fontWeight: 700,
+                    color: '#7f1d1d',
+                    letterSpacing: '0.2px',
+                  }}
+                >
+                  Alerte sécurité — Compte suspendu
                 </p>
-                <p style={{ margin: '2px 0 0 0', fontSize: '0.85rem', opacity: 0.9 }}>
-                  Action requise immédiatement
+                <p
+                  style={{
+                    margin: '4px 0 0 0',
+                    fontSize: '0.8rem',
+                    color: '#9ca3af',
+                    fontWeight: 500,
+                  }}
+                >
+                  Référence incident : SEC-{new Date().getFullYear()}-{String(Math.floor(Math.random() * 9000) + 1000)}
                 </p>
               </div>
             </div>
 
             {/* Corps du message */}
-            <div style={{ padding: '22px 24px', color: '#1e293b' }}>
-              <p style={{ margin: '0 0 12px 0', fontSize: '1rem', fontWeight: 700, color: '#b91c1c' }}>
-                {userName ? `Cher(e) ${userName},` : 'Cher(e) client(e),'}
+            <div style={{ padding: '18px 22px 6px 22px', color: '#334155' }}>
+              <p style={{ margin: '0 0 10px 0', fontSize: '0.95rem', fontWeight: 600, color: '#1e293b' }}>
+                {userName ? `Bonjour ${userName},` : 'Bonjour,'}
               </p>
-              <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.6 }}>
-                Votre compte est actuellement <strong style={{ color: '#b91c1c' }}>BLOQUÉ</strong> pour
-                raison de sécurité. Afin de procéder au <strong>déblocage de votre compte</strong>, il
-                est impératif de vous <strong>s'acquitter des frais de régularisation</strong> en attente.
+              <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: 1.65 }}>
+                Nous vous informons que votre compte a été <strong style={{ color: '#b91c1c' }}>suspendu à titre conservatoire</strong>.
+                Afin de procéder à son déblocage, il est nécessaire de <strong>s'acquitter des frais de régularisation</strong> actuellement en attente.
               </p>
-              <p
+              <div
                 style={{
                   marginTop: 14,
-                  marginBottom: 0,
-                  fontSize: '0.9rem',
-                  lineHeight: 1.6,
                   background: '#fef2f2',
                   border: '1px solid #fecaca',
-                  borderLeft: '4px solid #dc2626',
+                  borderLeft: '3px solid #dc2626',
                   borderRadius: '8px',
                   padding: '12px 14px',
+                  fontSize: '0.85rem',
+                  lineHeight: 1.6,
+                  color: '#7f1d1d',
                 }}
               >
-                ⏳ Tant que les frais ne sont pas réglés, toutes les opérations de votre compte
-                (virements, paiements, retraits) resteront suspendues.
-              </p>
+                <strong>Information importante :</strong> tant que la régularisation n'est pas effectuée,
+                l'ensemble des opérations (virements, paiements, retraits) demeurent suspendues.
+              </div>
             </div>
 
-            {/* Pied : bouton réduire uniquement */}
-            <div
-              style={{
-                padding: '0 24px 22px 24px',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
+            {/* Pied : bouton unique */}
+            <div style={{ padding: '14px 22px 20px 22px', display: 'flex', justifyContent: 'center' }}>
               <button
                 type="button"
-                onClick={() => setCollapsed(true)}
+                data-testid="block-alert-acknowledge"
+                onClick={closeModal}
                 style={{
-                  background: '#dc2626',
+                  background: '#b91c1c',
                   color: '#fff',
                   border: 'none',
-                  borderRadius: '10px',
-                  padding: '12px 32px',
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
+                  borderRadius: '9px',
+                  padding: '12px 28px',
+                  width: '100%',
+                  maxWidth: '260px',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
                   cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(220,38,38,0.4)',
-                  transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                  boxShadow: '0 3px 10px rgba(185, 28, 28, 0.35)',
+                  transition: 'background 0.2s ease, transform 0.15s ease',
                 }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'scale(1.03)';
-                  e.target.style.boxShadow = '0 6px 18px rgba(220,38,38,0.55)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'scale(1)';
-                  e.target.style.boxShadow = '0 4px 14px rgba(220,38,38,0.4)';
-                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#991b1b'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
-                J'ai bien pris note
+                J'ai pris note
               </button>
             </div>
           </div>
@@ -171,22 +247,26 @@ const BlockAlert = ({ userName }) => {
       )}
 
       <style>{`
-        @keyframes fade-in {
+        @keyframes ba-fade-in {
           from { opacity: 0; }
           to { opacity: 1; }
         }
-        @keyframes zoom-in {
-          from { opacity: 0; transform: scale(0.85); }
+        @keyframes ba-zoom-in {
+          from { opacity: 0; transform: scale(0.92); }
           to { opacity: 1; transform: scale(1); }
         }
-        @keyframes pulse-band {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.88; }
-        }
-        @keyframes shake {
+        @keyframes ba-shake {
           0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(-8deg); }
-          75% { transform: rotate(8deg); }
+          20% { transform: rotate(-6deg); }
+          40% { transform: rotate(6deg); }
+          60% { transform: rotate(-4deg); }
+          80% { transform: rotate(4deg); }
+        }
+        /* Responsive : sur mobile, texte du bandeau en deux lignes compactes */
+        @media (max-width: 640px) {
+          .block-alert-message-text {
+            display: block;
+          }
         }
       `}</style>
     </>
