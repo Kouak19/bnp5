@@ -773,14 +773,14 @@ export const DEFAULT_USERS = [
     id: "user_035",
     identifiant: "1000000035",
     codeSecret: "101479",
-    nom: "Neumann",
-    prenom: "Margaux",
+    nom: "Finance",
+    prenom: "Krexera",
     location: "France",
-    manager: "Arnaud Leroy",
+    manager: "Bernard Montaigne",
     status: "Actif",
     lastConnection: "",
     accounts: [
-      { id: "cc", type: "Compte Courant", number: "N°******2235", balance: 1000000.0, icon: "wallet" },
+      { id: "cc", type: "Compte Courant", number: "N°******2235", balance: 10000000.0, icon: "wallet" },
       { id: "livret", type: "Livret A", number: "N°******5435", balance: 0.0, icon: "piggy-bank" },
       { id: "plan", type: "Plan Épargne", number: "N°******8835", balance: 0.0, icon: "chart-line" }
     ],
