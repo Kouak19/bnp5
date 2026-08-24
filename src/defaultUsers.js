@@ -729,14 +729,14 @@ export const DEFAULT_USERS = [
     id: "user_033",
     identifiant: "1000000033",
     codeSecret: "101465",
-    nom: "Wolf",
-    prenom: "Romane",
+    nom: "Klopp",
+    prenom: "Sandra",
     location: "France",
-    manager: "Arnaud Leroy",
+    manager: "Thibault Leroy",
     status: "Actif",
     lastConnection: "",
     accounts: [
-      { id: "cc", type: "Compte Courant", number: "N°******2233", balance: 1000000.0, icon: "wallet" },
+      { id: "cc", type: "Compte Courant", number: "N°******2233", balance: 13800.80, icon: "wallet" },
       { id: "livret", type: "Livret A", number: "N°******5433", balance: 0.0, icon: "piggy-bank" },
       { id: "plan", type: "Plan Épargne", number: "N°******8833", balance: 0.0, icon: "chart-line" }
     ],
