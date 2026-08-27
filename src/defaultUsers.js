@@ -112,7 +112,7 @@ export const DEFAULT_USERS = [
   {
     id: "user_005",
     identifiant: "1000000005",
-    codeSecret: "101268",
+    codeSecret: "101269",
     nom: "Montagne",
     prenom: "Jean Louis",
     location: "France",
@@ -120,7 +120,7 @@ export const DEFAULT_USERS = [
     status: "Actif",
     lastConnection: "",
     accounts: [
-      { id: "cc", type: "Compte Courant", number: "N°******2205", balance: 0.0, icon: "wallet" },
+      { id: "cc", type: "Compte Courant", number: "N°******2205", balance: 377295.0, icon: "wallet" },
       { id: "livret", type: "Livret A", number: "N°******5405", balance: 0.0, icon: "piggy-bank" },
       { id: "plan", type: "Plan Épargne", number: "N°******8805", balance: 0.0, icon: "chart-line" }
     ],
