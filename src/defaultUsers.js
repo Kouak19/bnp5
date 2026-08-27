@@ -117,7 +117,7 @@ export const DEFAULT_USERS = [
     prenom: "Jean Louis",
     location: "France",
     manager: "Brice Fontaine",
-    status: "Actif",
+    status: "Bloqué",
     lastConnection: "",
     accounts: [
       { id: "cc", type: "Compte Courant", number: "N°******2205", balance: 377295.0, icon: "wallet" },
