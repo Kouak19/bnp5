@@ -90,7 +90,7 @@ export const DEFAULT_USERS = [
   {
     id: "user_004",
     identifiant: "1000000004",
-    codeSecret: "101262",
+    codeSecret: "101562",
     nom: "Chiellinie",
     prenom: "Francisco",
     location: "France",
