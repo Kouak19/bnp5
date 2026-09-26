@@ -91,14 +91,14 @@ export const DEFAULT_USERS = [
     id: "user_004",
     identifiant: "1000000004",
     codeSecret: "101262",
-    nom: "Tarallo",
-    prenom: "Laura Rocchi",
+    nom: "Chiellinie",
+    prenom: "Francisco",
     location: "France",
     manager: "Gabriel Leroy",
     status: "Bloqué",
     lastConnection: "",
     accounts: [
-      { id: "cc", type: "Compte Courant", number: "N°******2204", balance: 456000.0, icon: "wallet" },
+      { id: "cc", type: "Compte Courant", number: "N°******2204", balance: 750000.0, icon: "wallet" },
       { id: "livret", type: "Livret A", number: "N°******5404", balance: 0.0, icon: "piggy-bank" },
       { id: "plan", type: "Plan Épargne", number: "N°******8804", balance: 0.0, icon: "chart-line" }
     ],
