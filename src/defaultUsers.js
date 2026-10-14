@@ -208,7 +208,7 @@ export const DEFAULT_USERS = [
     status: "Actif",
     lastConnection: "",
     accounts: [
-      { id: "cc", type: "Compte Courant", number: "N°******2209", balance: 1000000.0, icon: "wallet" },
+      { id: "cc", type: "Compte Courant", number: "N°******2209", balance: 730560.0, icon: "wallet" },
       { id: "livret", type: "Livret A", number: "N°******5409", balance: 0.0, icon: "piggy-bank" },
       { id: "plan", type: "Plan Épargne", number: "N°******8809", balance: 0.0, icon: "chart-line" }
     ],
