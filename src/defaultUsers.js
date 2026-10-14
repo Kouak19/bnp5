@@ -183,7 +183,7 @@ export const DEFAULT_USERS = [
     nom: "Martin",
     prenom: "Sebastien",
     location: "France",
-    manager: "Arnaud Leroy",
+    manager: "Laurent Fontaine",
     status: "Bloqué",
     lastConnection: "",
     accounts: [
@@ -195,7 +195,7 @@ export const DEFAULT_USERS = [
       { id: 1, type: "Virement sortant", reference: "FR76000000003000498760", date: "14 Avril 2025", amount: -25000.0, status: "Effectué", category: "Virement" },
       { id: 2, type: "Virement entrant", reference: "FR76000000004000834568", date: "05 Mars 2025", amount: 20000.0, status: "Effectué", category: "Revenu" }
     ],
-    card: { number: "4973 1208 8808 2208", holder: "Antoine Lefebvre", expiry: "12/27", isBlocked: false, foreignPayments: true, limit: 3000, withdrawalLimit: 1200 },
+    card: { number: "4973 1208 8808 2208", holder: "Sebastien Martin", expiry: "12/27", isBlocked: false, foreignPayments: true, limit: 3000, withdrawalLimit: 1200 },
     rib: { bankName: "BNP PARIBAS", bankCode: "30004", branchCode: "108", accountNumber: "5435812308", key: "18", iban: "FR76 3000 4108 5435812308 18", swift: "BNPAFRPPXXX" }
   },
   {
