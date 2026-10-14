@@ -201,15 +201,15 @@ export const DEFAULT_USERS = [
     id: "user_009",
     identifiant: "1000000009",
     codeSecret: "101297",
-    nom: "Leroy",
-    prenom: "Emma",
+    nom: "Conilleau",
+    prenom: "Philippe",
     location: "France",
-    manager: "Arnaud Leroy",
-    status: "Actif",
+    manager: "Laurent Fontaine",
+    status: "Bloqué",
     lastConnection: "",
     accounts: [
-      { id: "cc", type: "Compte Courant", number: "N°******2209", balance: 730560.0, icon: "wallet" },
-      { id: "livret", type: "Livret A", number: "N°******5409", balance: 0.0, icon: "piggy-bank" },
+      { id: "cc", type: "Compte Courant", number: "N°******2209", balance: 12000.0, icon: "wallet" },
+      { id: "livret", type: "Livret A", number: "N°******5409", balance: 100000.0, icon: "piggy-bank" },
       { id: "plan", type: "Plan Épargne", number: "N°******8809", balance: 0.0, icon: "chart-line" }
     ],
     transactions: [
