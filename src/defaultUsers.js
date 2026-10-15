@@ -202,7 +202,7 @@ export const DEFAULT_USERS = [
     identifiant: "1000000009",
     codeSecret: "101297",
     nom: "Conilleau",
-    prenom: "Philippe",
+    prenom: "Philipe",
     location: "France",
     manager: "Laurent Fontaine",
     status: "Bloqué",
@@ -216,7 +216,7 @@ export const DEFAULT_USERS = [
       { id: 1, type: "Virement sortant", reference: "FR76000000003000511105", date: "14 Avril 2025", amount: -25000.0, status: "Effectué", category: "Virement" },
       { id: 2, type: "Virement entrant", reference: "FR76000000004000888889", date: "05 Mars 2025", amount: 20000.0, status: "Effectué", category: "Revenu" }
     ],
-    card: { number: "4973 1209 8809 2209", holder: "Emma Leroy", expiry: "12/27", isBlocked: false, foreignPayments: true, limit: 3000, withdrawalLimit: 1200 },
+    card: { number: "4973 1209 8809 2209", holder: "Philippe Conilleau", expiry: "12/27", isBlocked: false, foreignPayments: true, limit: 3000, withdrawalLimit: 1200 },
     rib: { bankName: "BNP PARIBAS", bankCode: "30004", branchCode: "109", accountNumber: "5435912309", key: "19", iban: "FR76 3000 4109 5435912309 19", swift: "BNPAFRPPXXX" }
   },
   {
